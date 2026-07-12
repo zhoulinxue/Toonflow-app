@@ -1,0 +1,764 @@
+{
+  "14689": {
+    "inputs": {
+      "image": "77bd7d363aa86558c850a8d7ca1a9955.jpeg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "14690": {
+    "inputs": {
+      "value": "好的，请查收根据约束手册生成的战锤40K爆弹枪图像描述：\n\nA Warhammer 40K Space Marine Bolter, CG render, metallic texture, battle-worn, gothic ornamentation, single object on neutral gray background, centered composition, high detail texture, grimdark style, no text in the image, large ammunition drum, heavy metal barrel with compensator, extensive use wear, scratches and dents on the metal surface, skull and Imperial Eagle motifs, dark and oppressive lighting, polished ceramite and steel, intricate purity seals, weapon oil residue."
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "字符串（多行）"
+    }
+  },
+  "14692": {
+    "inputs": {
+      "filename_prefix": "assets/asset",
+      "images": [
+        "14691:14052",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "14728": {
+    "inputs": {
+      "lora_name": "flux-2-klein-NSFW.safetensors",
+      "strength_model": 0.9,
+      "model": [
+        "14735",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14730": {
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "加载CLIP"
+    }
+  },
+  "14732": {
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "14735": {
+    "inputs": {
+      "unet_name": "flux-2-klein-9b-fp8.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "UNet加载器"
+    }
+  },
+  "14736": {
+    "inputs": {
+      "lora_name": "flux-2-klein-NSFW.safetensors",
+      "strength_model": 0.8,
+      "model": [
+        "14735",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14685:14040": {
+    "inputs": {
+      "width": [
+        "14685:14043",
+        0
+      ],
+      "height": [
+        "14685:14043",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "空Latent图像（SD3）"
+    }
+  },
+  "14685:14041": {
+    "inputs": {
+      "value": 4
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "STEPS IMAGE SAMPLING"
+    }
+  },
+  "14685:14042": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "CFG"
+    }
+  },
+  "14685:14043": {
+    "inputs": {
+      "resolution": "1152p",
+      "aspect_ratio": "16:9",
+      "custom_width": 1920,
+      "custom_height": 1080
+    },
+    "class_type": "ResolutionPicker",
+    "_meta": {
+      "title": "Resolution Picker Images"
+    }
+  },
+  "14691:14044": {
+    "inputs": {
+      "guidance": 1,
+      "conditioning": [
+        "14691:14069",
+        0
+      ]
+    },
+    "class_type": "FluxGuidance",
+    "_meta": {
+      "title": "Flux引导"
+    }
+  },
+  "14691:14045": {
+    "inputs": {},
+    "class_type": "ImageExists",
+    "_meta": {
+      "title": "Image Exists"
+    }
+  },
+  "14691:14046": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "14691:14045",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "14691:14047": {
+    "inputs": {},
+    "class_type": "ImageExists",
+    "_meta": {
+      "title": "Image Exists"
+    }
+  },
+  "14691:14048": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "14691:14047",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "14691:14049": {
+    "inputs": {
+      "conditioning": [
+        "14691:14063",
+        0
+      ],
+      "latent": [
+        "14691:14056",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "14691:14050": {
+    "inputs": {},
+    "class_type": "ImageExists",
+    "_meta": {
+      "title": "Image Exists"
+    }
+  },
+  "14691:14051": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "14691:14050",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "14691:14052": {
+    "inputs": {
+      "samples": [
+        "14691:14067",
+        0
+      ],
+      "vae": [
+        "14732",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "14691:14053": {
+    "inputs": {
+      "image": [
+        "14689",
+        0
+      ]
+    },
+    "class_type": "ImageExists",
+    "_meta": {
+      "title": "Image Exists"
+    }
+  },
+  "14691:14054": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "14691:14053",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "14691:14055": {
+    "inputs": {
+      "pixels": [
+        "14691:14046",
+        0
+      ],
+      "vae": [
+        "14732",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "14691:14056": {
+    "inputs": {
+      "pixels": [
+        "14691:14048",
+        0
+      ],
+      "vae": [
+        "14732",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "14691:14057": {
+    "inputs": {
+      "pixels": [
+        "14691:14051",
+        0
+      ],
+      "vae": [
+        "14732",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "14691:14058": {
+    "inputs": {
+      "conditioning": [
+        "14691:14044",
+        0
+      ],
+      "latent": [
+        "14691:14061",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "14691:14059": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "14730",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode ( Negative Prompt)"
+    }
+  },
+  "14691:14060": {
+    "inputs": {
+      "conditioning": [
+        "14691:14064",
+        0
+      ],
+      "latent": [
+        "14691:14055",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "14691:14061": {
+    "inputs": {
+      "pixels": [
+        "14691:14054",
+        0
+      ],
+      "vae": [
+        "14732",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "14691:14062": {
+    "inputs": {
+      "conditioning": [
+        "14691:14065",
+        0
+      ],
+      "latent": [
+        "14691:14057",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "14691:14063": {
+    "inputs": {
+      "boolean": [
+        "14691:14045",
+        1
+      ],
+      "on_true": [
+        "14691:14060",
+        0
+      ],
+      "on_false": [
+        "14691:14064",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "是否判断"
+    }
+  },
+  "14691:14064": {
+    "inputs": {
+      "boolean": [
+        "14691:14053",
+        1
+      ],
+      "on_true": [
+        "14691:14058",
+        0
+      ],
+      "on_false": [
+        "14691:14044",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "是否判断"
+    }
+  },
+  "14691:14065": {
+    "inputs": {
+      "boolean": [
+        "14691:14047",
+        1
+      ],
+      "on_true": [
+        "14691:14049",
+        0
+      ],
+      "on_false": [
+        "14691:14063",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "是否判断"
+    }
+  },
+  "14691:14066": {
+    "inputs": {
+      "boolean": [
+        "14691:14050",
+        1
+      ],
+      "on_true": [
+        "14691:14062",
+        0
+      ],
+      "on_false": [
+        "14691:14065",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "是否判断"
+    }
+  },
+  "14691:14069": {
+    "inputs": {
+      "text": [
+        "14690",
+        0
+      ],
+      "clip": [
+        "14730",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "14691:14068": {
+    "inputs": {
+      "value": 1034973049061710
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "整数"
+    }
+  },
+  "14691:14694": {
+    "inputs": {
+      "lora_name": "flux-2-klein-NSFW.safetensors",
+      "strength_model": 0.9,
+      "model": [
+        "14691:14700",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14691:14696": {
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "加载CLIP"
+    }
+  },
+  "14691:14698": {
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "14691:14700": {
+    "inputs": {
+      "unet_name": "flux-2-klein-9b-fp8.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "UNet加载器"
+    }
+  },
+  "14691:14701": {
+    "inputs": {
+      "lora_name": "flux-2-klein-NSFW.safetensors",
+      "strength_model": 0.8,
+      "model": [
+        "14691:14700",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14691:14705": {
+    "inputs": {
+      "model_name": "ltx-2.3-spatial-upscaler-x2-1.1.safetensors"
+    },
+    "class_type": "LatentUpscaleModelLoader",
+    "_meta": {
+      "title": "加载Latent放大模型"
+    }
+  },
+  "14691:14708": {
+    "inputs": {
+      "lora_name": "ltx-2.3-22b-distilled-lora-384-1.1.safetensors",
+      "strength_model": 1,
+      "model": [
+        "14691:14714",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14691:14711": {
+    "inputs": {
+      "vae_name": "LTX23_video_vae_bf16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "14691:14713": {
+    "inputs": {
+      "vae_name": "LTX23_audio_vae_bf16.safetensors",
+      "device": "main_device",
+      "weight_dtype": "bf16"
+    },
+    "class_type": "VAELoaderKJ",
+    "_meta": {
+      "title": "VAELoader KJ"
+    }
+  },
+  "14691:14715": {
+    "inputs": {
+      "clip_name1": "gemma_3_12B_it_fp8_e4m3fn.safetensors",
+      "clip_name2": "ltx-2.3_text_projection_bf16.safetensors",
+      "type": "ltxv",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "双CLIP加载器"
+    }
+  },
+  "14691:14716": {
+    "inputs": {
+      "lora_name": "ltx-2.3-22b-ic-lora-lipdub-0.9.safetensors",
+      "strength_model": 1,
+      "model": [
+        "14691:14717",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14691:14717": {
+    "inputs": {
+      "lora_name": "ltx-2.3-22b-distilled-lora-384-1.1.safetensors",
+      "strength_model": 0.9,
+      "model": [
+        "14691:14714",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "14691:14714": {
+    "inputs": {
+      "unet_name": "ltx-2-3-22b-dev_transformer_only_fp8_input_scaled.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "UNet加载器"
+    }
+  },
+  "14691:14726:2232": {
+    "inputs": {
+      "width": [
+        "14691:14726:2233",
+        0
+      ],
+      "height": [
+        "14691:14726:2233",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "空Latent图像（SD3）"
+    }
+  },
+  "14691:14726:844": {
+    "inputs": {
+      "value": 4
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "STEPS IMAGE SAMPLING"
+    }
+  },
+  "14691:14726:850": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "CFG"
+    }
+  },
+  "14691:14726:2233": {
+    "inputs": {
+      "resolution": "1152p",
+      "aspect_ratio": "16:9",
+      "custom_width": 1920,
+      "custom_height": 1080
+    },
+    "class_type": "ResolutionPicker",
+    "_meta": {
+      "title": "Resolution Picker Images"
+    }
+  },
+  "14691:14727:13480": {
+    "inputs": {
+      "value": 24
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Frame Rate"
+    }
+  },
+  "14691:14727:13492": {
+    "inputs": {
+      "resolution": "1080p",
+      "aspect_ratio": "16:9",
+      "custom_width": 1280,
+      "custom_height": 736
+    },
+    "class_type": "LtxResolutionPicker",
+    "_meta": {
+      "title": "LTX Resolution Picker"
+    }
+  },
+  "14691:14067": {
+    "inputs": {
+      "seed": [
+        "14691:14068",
+        0
+      ],
+      "steps": [
+        "14685:14041",
+        0
+      ],
+      "cfg": [
+        "14685:14042",
+        0
+      ],
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "14735",
+        0
+      ],
+      "positive": [
+        "14691:14066",
+        0
+      ],
+      "negative": [
+        "14691:14059",
+        0
+      ],
+      "latent_image": [
+        "14685:14040",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "K采样器"
+    }
+  }
+}
