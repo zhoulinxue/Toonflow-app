@@ -1,4 +1,4 @@
-import express from "express";
+﻿import express from "express";
 import u from "@/utils";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
@@ -26,6 +26,34 @@ function getExtFromBase64(base64Data: string): string {
 }
 
 // 文件上传（支持图片、音频、视频）
+// Direct image upload for cornerScape history
+router.post('/image', validateFields({
+    projectId: z.number(),
+    id: z.number(),
+    type: z.enum(['role', 'scene', 'tool', 'storyboard']),
+    name: z.string(),
+    base64: z.string(),
+    resolution: z.string().optional().nullable(),
+  }), async (req, res) => {
+    const { projectId, id, type, name, base64, resolution } = req.body;
+    const dirMap = { role: 'role', scene: 'scene', tool: 'props', storyboard: 'storyboard' };
+    const dir = dirMap[type] || 'props';
+    const imagePath = '/' + projectId + '/' + dir + '/' + uuid() + '.jpg';
+    try {
+      const raw = base64.includes('base64,') ? Buffer.from(base64.split('base64,')[1], 'base64') : Buffer.from(base64, 'base64');
+      await u.oss.writeFile(imagePath, raw);
+      const [imageId] = await u.db('o_image').insert({
+        type, state: '已完成', assetsId: id, model: 'upload',
+        resolution: resolution || '1K', filePath: imagePath,
+      });
+      await u.db('o_assets').where('id', id).update({ imageId });
+      const url = await u.oss.getSmallImageUrl(imagePath);
+      return res.status(200).send(success({ path: url, assetsId: id, imageId }));
+    } catch (e) {
+      return res.status(400).send(error(u.error(e).message || 'Upload failed'));
+    }
+  });
+
 export default router.post(
   "/",
   validateFields({
@@ -58,3 +86,32 @@ export default router.post(
     res.status(200).send(success("上传成功"));
   },
 );
+
+
+// Direct image upload for cornerScape history
+router.post('/image', validateFields({
+    projectId: z.number(),
+    id: z.number(),
+    type: z.enum(['role', 'scene', 'tool', 'storyboard']),
+    name: z.string(),
+    base64: z.string(),
+    resolution: z.string().optional().nullable(),
+  }), async (req, res) => {
+    const { projectId, id, type, name, base64, resolution } = req.body;
+    const dirMap = { role: 'role', scene: 'scene', tool: 'props', storyboard: 'storyboard' };
+    const dir = dirMap[type] || 'props';
+    const imagePath = '/' + projectId + '/' + dir + '/' + uuid() + '.jpg';
+    try {
+      const raw = base64.includes('base64,') ? Buffer.from(base64.split('base64,')[1], 'base64') : Buffer.from(base64, 'base64');
+      await u.oss.writeFile(imagePath, raw);
+      const [imageId] = await u.db('o_image').insert({
+        type, state: '已完成', assetsId: id, model: 'upload',
+        resolution: resolution || '1K', filePath: imagePath,
+      });
+      await u.db('o_assets').where('id', id).update({ imageId });
+      const url = await u.oss.getSmallImageUrl(imagePath);
+      return res.status(200).send(success({ path: url, assetsId: id, imageId }));
+    } catch (e) {
+      return res.status(400).send(error(u.error(e).message || 'Upload failed'));
+    }
+  });

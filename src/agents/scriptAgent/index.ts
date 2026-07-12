@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+﻿import { Socket } from "socket.io";
 import { tool, jsonSchema } from "ai";
 import { z } from "zod";
 import u from "@/utils";
@@ -52,14 +52,24 @@ export async function runDecisionAI(ctx: AgentContext) {
 
   const novelData = await u.db("o_novel").where("projectId", resTool.data.projectId).select("chapterIndex");
 
+  const novelPreview = novelData.map((ch, i) => {
+    const title = ch.chapter || "Chapter " + ch.chapterIndex;
+    const text = (ch.chapterData || "").slice(0, 500);
+    const more = (ch.chapterData || "").length > 500 ? "...(use get_novel_text for full content)" : "";
+    return "[" + title + "]" + "\n" + text + more;
+  }).join("\n\n");
+
   const projectInfo = [
-    "## 项目信息",
-    `小说名称：${projectData?.name ?? "未知"}`,
-    `小说类型：${projectData?.type ?? "未知"}`,
-    `小说简介：${projectData?.intro ?? "无"}`,
-    `目标改编影视视觉手册|画风：${projectData?.artStyle ?? "无"}`,
-    `目标改编视频画幅：${projectData?.videoRatio ?? "16:9"}`,
-    `章节数量：${novelData.length}章`,
+    "## Project Info",
+    "Name: " + (projectData?.name ?? "Unknown"),
+    "Type: " + (projectData?.type ?? "Unknown"),
+    "Intro: " + (projectData?.intro ?? "None"),
+    "Art Style: " + (projectData?.artStyle ?? "None"),
+    "Video Ratio: " + (projectData?.videoRatio ?? "16:9"),
+    "Chapters: " + novelData.length,
+    "",
+    "## Novel Content Preview (first 500 chars per chapter)",
+    novelPreview,
   ].join("\n");
 
   const { fullStream } = await u.Ai.Text("scriptAgent:decisionAgent", ctx.thinkConfig.think, ctx.thinkConfig.thinlLevel).stream({

@@ -1,4 +1,4 @@
-import express from "express";
+﻿import express from "express";
 import { success } from "@/lib/responseFormat";
 import u from "@/utils";
 const router = express.Router();
@@ -9,11 +9,17 @@ export default router.post("/", async (req, res) => {
   const list = (
     await Promise.all(
       data.map(async (item) => {
-        const vendor = u.vendor.getVendor(item.id!);
-        if (!vendor) {
-          await u.db("o_vendorConfig").where("id", item.id).delete();
-          return null
-        };
+        let vendor;
+        try {
+          vendor = u.vendor.getVendor(item.id!);
+          if (!vendor) {
+            await u.db("o_vendorConfig").where("id", item.id).delete();
+            return null
+          };
+        } catch (err: any) {
+          console.error("[getVendorList] Failed to load vendor " + item.id + ":", err.message);
+          return null;
+        }
         return {
           ...item,
           inputValues: JSON.parse(item.inputValues ?? "{}"),
