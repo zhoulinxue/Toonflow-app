@@ -1,6 +1,6 @@
 appId: net.toonflow.www
 productName: ToonFlow
-copyright: Copyright © 2026
+copyright: Copyright 婕?2026
 
 directories:
   output: dist
@@ -24,6 +24,10 @@ asar: true
 asarUnpack:
   - "**/node_modules/sharp/**"
   - "**/node_modules/@img/**"
+  - "**/node_modules/better-sqlite3/**"
+  - "**/node_modules/bindings/**"
+  - "**/node_modules/sqlite3/**"
+  - "**/node_modules/onnxruntime-node/**"
 
 extraResources:
   - from: data

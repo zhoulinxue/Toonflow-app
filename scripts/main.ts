@@ -90,32 +90,49 @@ function getNodeModulesPaths(): string[] {
   }
   return paths;
 }
+// Strategy: combine NODE_PATH (for general module resolution) with
+// a _resolveFilename redirect (for native modules that need unpacked dir).
+// NODE_PATH adds asar node_modules to globalPaths so modules in the asar
+// are findable from userData. The redirect ensures native .node modules
+// load from the unpacked directory where DLLs are present.
+const NATIVE_REDIRECTS = new Set([
+  "better-sqlite3", "sharp", "sqlite3", "onnxruntime-node",
+]);
 
-//动态加载
+let _setupDone = false;
+
 function requireWithCustomPaths(modulePath: string): any {
   const appNodeModulesPaths = getNodeModulesPaths();
-  // 保存原始方法
-  const originalNodeModulePaths = (Module as any)._nodeModulePaths;
-  // 临时修改模块路径解析
-  (Module as any)._nodeModulePaths = function (from: string): string[] {
-    const paths = originalNodeModulePaths.call(this, from);
-    // 将主程序的 node_modules 添加到前面
-    for (let i = appNodeModulesPaths.length - 1; i >= 0; i--) {
-      const p = appNodeModulesPaths[i];
-      if (!paths.includes(p)) {
-        paths.unshift(p);
-      }
+  const unpackedPath = appNodeModulesPaths[0];
+
+  if (!_setupDone) {
+    _setupDone = true;
+    
+    // 1. Set NODE_PATH so modules in the asar are findable
+    const existing = process.env.NODE_PATH || "";
+    process.env.NODE_PATH = [...appNodeModulesPaths, existing].filter(Boolean).join(require("path").delimiter);
+    require("module")._initPaths();
+
+    // 2. Redirect native modules to unpacked path (where DLLs are)
+    if (unpackedPath) {
+      const realModule = require("module");
+      const origResolve = realModule._resolveFilename;
+      const pathMod = require("path");
+
+      realModule._resolveFilename = function(request: string, parent: any, isMain: boolean, options: any) {
+        if (NATIVE_REDIRECTS.has(request)) {
+          try {
+            const alt = pathMod.join(unpackedPath, request);
+            return origResolve.call(this, alt, parent, isMain, options);
+          } catch (_) {}
+        }
+        return origResolve.call(this, request, parent, isMain, options);
+      };
     }
-    return paths;
-  };
-  try {
-    // 清除缓存确保加载最新
-    delete require.cache[require.resolve(modulePath)];
-    return require(modulePath);
-  } finally {
-    // 恢复原始方法
-    (Module as any)._nodeModulePaths = originalNodeModulePaths;
   }
+
+  delete require.cache[require.resolve(modulePath)];
+  return require(modulePath);
 }
 
 let mainWindow: BrowserWindow | null = null;
@@ -172,6 +189,9 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.whenReady().then(async () => {
+  try { require("fs").appendFileSync(require("path").join(require("electron").app.getPath("userData"), "startup.log"), "START\n"); } catch(e) {}
+
+  try { require("fs").appendFileSync(require("path").join(app.getPath("userData"), "debug.log"), "WHEN_READY\n"); } catch(e) {}
   try {
     let servePath: string;
     if (app.isPackaged) {
@@ -184,9 +204,15 @@ app.whenReady().then(async () => {
       servePath = path.join(process.cwd(), "src", "app.ts");
     }
     // 使用自定义路径加载模块
+
     const mod = requireWithCustomPaths(servePath);
+
     closeServeFn = mod.closeServe;
+
     const port = await mod.default(true);
+    try { require("fs").appendFileSync(require("path").join(require("electron").app.getPath("userData"), "startup.log"), "PORT=" + port + "\n"); } catch(e) {}
+
+
     process.env.PORT = port;
     await new Promise<void>((resolve, reject) => {
       setTimeout(() => {
@@ -268,6 +294,10 @@ app.whenReady().then(async () => {
     // 服务启动成功，创建主窗口（主窗口 ready-to-show 时自动关闭loading）
     await createMainWindow();
   } catch (err) {
+    try { require("fs").appendFileSync(require("path").join(require("electron").app.getPath("userData"), "startup.log"), "ERROR: " + (err.stack || err.message || String(err)) + "\n"); } catch(e) {}
+    try { require("fs").appendFileSync(require("path").join(require("electron").app.getPath("userData"), "startup.log"), "ERROR: " + (err.stack || err.message || String(err)) + "\n"); } catch(e) {}
+    try { require("fs").appendFileSync(require("path").join(require("electron").app.getPath("userData"), "startup.log"), "ERROR: " + (err.stack || err.message || String(err)) + "\n"); } catch(e) {}
+
     console.error("[服务启动失败]:", err);
     await createMainWindow();
   }
